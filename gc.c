@@ -62,11 +62,11 @@ static void gc_adjust(GC* gc) {
 }
 
 static void gc_mark_ptr(GC* gc, void* ptr) {
-    GC_ptr_t* gc_ptr = gc_find_ptr(gc->items, gc->capacity, ptr);
-
     if ((uintptr_t)ptr < gc->minptr || (uintptr_t)ptr > gc->maxptr) return;
 
-    if (gc_ptr->flags & GC_MARK) return;
+    GC_ptr_t* gc_ptr = gc_find_ptr(gc->items, gc->capacity, ptr);
+    if (gc_ptr->hash == 0 || gc_ptr->flags & GC_MARK) return;
+
     gc_ptr->flags |= GC_MARK;
 
     if (gc_ptr->flags & GC_LEAF) return;
